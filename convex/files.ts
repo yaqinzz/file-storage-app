@@ -31,27 +31,26 @@ export const createFile = mutation({
 		orgId: v.string(),
 	},
 	async handler(ctx, args) {
-		throw new Error('Not implemented')
-		// const identity = await ctx.auth.getUserIdentity()
+		const identity = await ctx.auth.getUserIdentity()
 
-		// if (!identity) {
-		// 	throw new ConvexError('You must be signed in to create a file')
-		// }
+		if (!identity) {
+			throw new ConvexError('You must be signed in to create a file')
+		}
 
-		// const hasAccess = await hasAccessToOrg(
-		// 	ctx,
-		// 	identity.tokenIdentifier,
-		// 	args.orgId
-		// )
-		// if (!hasAccess) {
-		// 	throw new ConvexError('You do not access to this organization')
-		// }
+		const hasAccess = await hasAccessToOrg(
+			ctx,
+			identity.tokenIdentifier,
+			args.orgId
+		)
+		if (!hasAccess) {
+			throw new ConvexError('You do not access to this organization')
+		}
 
-		// await ctx.db.insert('files', {
-		// 	name: args.name,
-		// 	orgId: args.orgId,
-		// 	fileId: args.fileId,
-		// })
+		await ctx.db.insert('files', {
+			name: args.name,
+			orgId: args.orgId,
+			fileId: args.fileId,
+		})
 	},
 })
 
